@@ -1,3 +1,13 @@
+Java简介
+  Java介于编译型语言和解释型语言之间。
+    1.编译型语言如C、C++，代码是直接编译成机器码执行，但是不同的平台（x86、ARM等）CPU的指令集不同，因此，需要编译出每一种平台的对应机器码。
+    2.解释型语言如Python、Ruby没有这个问题，可以由解释器直接加载源码然后运行，代价是运行效率太低。
+    3.而Java是将代码编译成一种“字节码”，它类似于抽象的CPU指令，然后，针对不同平台编写虚拟机，不同平台的虚拟机负责加载字节码并执行，这样就实现了“一次编写，到处运行”的效果。
+    
+  Java SE：Standard Edition
+  Java EE：Enterprise Edition
+  Java ME：Micro Edition
+
 关于jdk，jre， jvm
 
   1.jdk：Java Development Kit —— java开发工具
@@ -34,3 +44,5 @@
   当我们从maven中获取jar包的时候，maven首先会在本地仓库中查找
   如果本地仓库有则返回；如果没有则从远程仓库中获取包，并在本地库中保存。
   此外，我们在maven项目中运行mvn install，项目将会自动打包并安装到本地仓库中。
+
+关于
