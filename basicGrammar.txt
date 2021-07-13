@@ -525,14 +525,265 @@ IO：
           public int run() { … }
         }
 
+      加上@Override可以让编译器帮助检查是否进行了正确的覆写。希望进行覆写，但是不小心写错了方法签名，编译器会报错:
+
+        public class Main {
+          public static void main(String[] args) {
+            ...
+          }
+        }
+        class Person {
+          public void run() {}
+        }
+        public class Student extends Person {
+          @Override // Compile error!
+          public void run(String s) {} 
+        }
+      但是@Override不是必需的
+
+      引用变量的声明类型可能与其实际类型不符，例如：
+        Person p = new Student();
       
+    Java的实例方法调用是基于运行时的实际类型的动态调用，而非变量的声明类型。
+    这个非常重要的特性在面向对象编程中称之为多态:
 
+      public class Main {
+        public static void main(String[] args) {
+          Person p = new Student();
+          p.run(); // 应该打印Student.run
+        }
+      }
+      class Person {
+        public void run() {
+          System.out.println("Person.run");
+        }
+      }
+      class Student extends Person {
+        @Override
+        public void run() {
+          System.out.println("Student.run");
+        }
+      }
 
+    多态是指，针对某个类型的方法调用，其真正执行的方法取决于运行时期实际类型的方法.
+    对某个类型调用某个方法，执行的实际方法可能是某个子类的覆写方法.
+    多态具有一个非常强大的功能，就是允许添加更多类型的子类实现功能扩展，却不需要修改基于父类的代码。
 
+    覆写Object方法:
+
+      因为所有的class最终都继承自Object，而Object定义了几个重要的方法：
+
+        toString()：把instance输出为String；
+        equals()：判断两个instance是否逻辑相等；
+        hashCode()：计算一个instance的哈希值。
+
+      在必要的情况下，我们可以覆写Object的这几个方法。例如：
+
+        class Person {
+          ...
+          // 显示更有意义的字符串:
+          @Override
+          public String toString() {
+              return "Person:name=" + name;
+          }
+
+          // 比较是否相等:
+          @Override
+          public boolean equals(Object o) {
+              // 当且仅当o为Person类型:
+              if (o instanceof Person) {
+                  Person p = (Person) o;
+                  // 并且name字段相同时，返回true:
+                  return this.name.equals(p.name);
+              }
+              return false;
+          }
+
+          // 计算hash:
+          @Override
+          public int hashCode() {
+              return this.name.hashCode();
+          }
+        }
+
+    调用super：
+
+      在子类的覆写方法中，如果要调用父类的被覆写的方法，可以通过super来调用。例如：
+
+        class Person {
+            protected String name;
+            public String hello() {
+                return "Hello, " + name;
+            }
+        }
+        Student extends Person {
+            @Override
+            public String hello() {
+                // 调用父类的hello()方法:
+                return super.hello() + "!";
+            }
+        }
+
+    final：
+
+      继承可以允许子类覆写父类的方法。
+      如果一个父类不允许子类对它的某个方法进行覆写，可以把该方法标记为final。用final修饰的方法不能被Override：
+
+        class Person {
+            protected String name;
+            public final String hello() {
+                return "Hello, " + name;
+            }
+        }
+        Student extends Person {
+            // compile error: 不允许覆写
+            @Override
+            public String hello() {
+            }
+        }
+
+      如果一个类不希望任何其他类继承自它，那么可以把这个类本身标记为final。用final修饰的类不能被继承：
+
+        final class Person {
+            protected String name;
+        }
+        // compile error: 不允许继承自Person
+        Student extends Person {
+        }
+
+      对于一个类的实例字段，同样可以用final修饰。用final修饰的字段在初始化后不能被修改。例如：
+
+        class Person {
+            public final String name = "Unamed";
+        }
+        Person p = new Person();
+        p.name = "New Name"; // compile error!
+
+      可以在构造方法中初始化final字段：
+
+        class Person {
+            public final String name;
+            public Person(String name) {
+                this.name = name;
+            }
+        }
       
+抽象类：
 
+  由于多态的存在，每个子类都可以覆写父类的方法
+  如果父类的方法本身不需要实现任何功能，仅仅是为了定义方法签名，目的是让子类去覆写它，那么，可以把父类的方法声明为抽象方法：
 
+    class Person {
+      public abstract void run();
+    }
+  
+  把一个方法声明为abstract，表示它是一个抽象方法，本身没有实现任何方法语句。
+  因为这个抽象方法本身是无法执行的，所以，Person类也无法被实例化。编译器会告诉我们，无法编译Person类，因为它包含抽象方法。
+  必须把Person类本身也声明为abstract，才能正确编译它：
 
+    abstract class Person {
+      public abstract void run();
+    }
 
+  如果一个class定义了方法，但没有具体执行代码，这个方法就是抽象方法，抽象方法用abstract修饰。
+  使用abstract修饰的类就是抽象类。我们无法实例化一个抽象类：
+    Person p = new Person(); // 编译错误
 
+  因为抽象类本身被设计成只能用于被继承，因此，抽象类可以强迫子类实现其定义的抽象方法，否则编译会报错。
+  因此，抽象方法实际上相当于定义了“规范”。
+
+    public class Main {
+      public static void main(String[] args) {
+        Person p = new Student();
+        p.run();
+      }
+    }
+
+    abstract class Person {
+      public abstract void run();
+    }
+    class Student extends Person {
+      @Override
+      public void run() {
+          System.out.println("Student.run");
+      }
+    }
+
+  面向抽象编程：
     
+    当我们定义了抽象类Person，以及具体的Student、Teacher子类的时候，我们可以通过抽象类Person类型去引用具体的子类的实例：
+
+      Person stu = new Student();
+      Person tch = new Teacher();
+
+    这种引用抽象类的好处在于，我们对其进行方法调用，并不关心Person类型变量的具体子类型：
+      stu.run();
+      tch.run();
+
+    面向抽象编程的本质就是：
+
+      1.上层代码只定义规范（例如：abstract class Person）；
+      2.不需要子类就可以实现业务逻辑（正常编译）；
+      3.具体的业务逻辑由不同的子类实现，调用者并不关心。
+      
+接口：
+  
+  在抽象类中，抽象方法本质上是定义接口规范：
+    即规定高层类的接口，从而保证所有子类都有相同的接口实现，这样，多态就能发挥出威力。
+    如果一个抽象类没有字段，所有方法全部都是抽象方法：
+
+      abstract class Person {
+          public abstract void run();
+          public abstract String getName();
+      }
+    
+    就可以把该抽象类改写为接口：interface：
+
+      interface Person {
+        void run();
+        String getName();
+      }
+
+  所谓interface，就是比抽象类还要抽象的纯抽象接口，因为它连字段都不能有。
+  因为接口定义的所有方法默认都是public abstract的，所以这两个修饰符不需要写出来（写不写效果都一样）。
+  当一个具体的class去实现一个interface时，需要使用implements关键字：
+
+    class Student implements Person {
+      private String name;
+
+      public Student(String name) {
+          this.name = name;
+      }
+
+      @Override
+      public void run() {
+          System.out.println(this.name + " run");
+      }
+
+      @Override
+      public String getName() {
+          return this.name;
+      }
+    }
+
+  在Java中，一个类只能继承自另一个类，不能从多个类继承。但是，一个类可以实现多个interface，例如：
+
+    class Student implements Person, Hello { // 实现了两个interface
+        ...
+    }
+
+  一个interface可以继承自另一个interface。interface继承自interface使用extends，它相当于扩展了接口的方法：
+
+    interface Hello {
+      void hello();
+    }
+
+    interface Person extends Hello {
+      void run();
+      String getName();
+    }
+
+  静态字段和静态方法：
+
+    在一个class中定义的字段，我们称之为实例字段。
+    实例字段的特点是，每个实例都有独立的字段，各个实例的同名字段互不影响。

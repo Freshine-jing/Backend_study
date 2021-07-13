@@ -1,0 +1,59 @@
+什么是spring？
+
+    Spring是一个支持快速开发Java EE应用程序的框架。
+    它提供了一系列底层容器和基础设施，并可以和大量常用的开源框架无缝集成，可以说是开发Java EE应用程序的必备。
+    随着Spring越来越受欢迎，在Spring Framework基础上，又诞生了Spring Boot、Spring Cloud、Spring Data、Spring Security等一系列基于Spring Framework的项目。
+
+    Spring Framework主要包括几个模块：
+
+        支持IoC和AOP的容器；
+        支持JDBC和ORM的数据访问模块；
+        支持声明式事务的模块；
+        支持基于Servlet的MVC开发；
+        支持基于Reactive的Web开发；
+        以及集成JMS、JavaMail、JMX、缓存等其他模块。
+
+    发展太久之后，配置十分繁琐
+
+DAO
+
+    DAO(Data Access Object) 数据访问对象是一个面向对象的数据库接口，它显露了 Microsoft Jet 数据库引擎
+    数据访问：顾名思义就是与数据库打交道。夹在业务逻辑与数据库资源中间。
+    DAO 最适用于单系统应用程序或小范围本地分布使用。
+
+IMPL：
+
+    在Java开发中，通常将后台分成几层，常见的是三层mvc：model、view、controller，模型视图控制层三层，
+    而impl通常处于controller层的service下，用来存放接口的实现类，impl的全称为implement，表示实现的意思。
+
+IOC机制：
+
+    什么是容器？
+
+        容器是一种为某种特定组件的运行提供必要支持的一个软件环境。
+        例如，Tomcat就是一个Servlet容器，它可以为Servlet的运行提供运行环境。
+        类似Docker这样的软件也是一个容器，它提供了必要的Linux环境以便运行一个特定的Linux进程。
+
+    IOC是一种思想
+
+         
+
+AOP机制：
+
+
+
+spring mvc：
+
+
+
+
+spring boot：
+
+    一个快速开发的脚手架
+    基于springboot可以快速开发单个微服务。是构建所有基于spring的应用程序的起点。
+    约定大于配置，旨在通过最少的spring前期配置使项目尽快启动运行
+
+spring cloud：
+
+    基于springboot实现的
+
